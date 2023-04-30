@@ -1,4 +1,5 @@
 # This is a sample Python script.
+import pygame
 from pygame import Vector2
 
 import core
@@ -84,14 +85,14 @@ def run():
     if core.memory("screen").__eq__(Screen.Screen.GAMEOVER):
         pass
 
-    if core.getMouseLeftClick():
-        core.getMouseLeftClick()
-        pass
-
    # if not core.memory("texture").ready:
    #     core.memory("texture").load()
    # core.memory("texture").show()
 
+    if core.getMouseLeftClick():
+        core.getMouseLeftClick()
+        print(pygame.mouse.get_pos())
+        pass
 
 
 core.main(setup, run)
