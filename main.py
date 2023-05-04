@@ -17,7 +17,7 @@ def setup():
     core.fps = 60
     core.memory("screen", Screen.Screen.MAIN)
     core.setBgColor((255, 255, 255))
-
+    core.setTitle("Space Invaders")
 
     #core.memory("texture", core.Texture("./ressource/img.png", Vector2(-200, -200), 0, (1000, 1000)))
     core.memory("textureP", core.Texture("./SpaceInvader/ressource/Play.png", Vector2(320, 100), 0, (1500, 1000)))
