@@ -47,35 +47,6 @@ def run():
             core.memory("textureE").load()
         core.memory("textureE").show()
 
-        p1 = Vector2(250, 100) #Point en haut a gauche a editer
-        p2 = Vector2(p1.x, p1.y + buttomHeight)
-        p3 = Vector2(p1.x + buttomWidth, p1.y + buttomHeight)
-        p4 = Vector2(p1.x + buttomWidth, p1.y)
-        p5 = Vector2(p1.x + 200, p1.y + 10) #Text position
-
-        #core.Draw.polygon((255, 255, 255), ((p1), (p2), (p3), (p4)))
-        #core.Draw.text((255, 0 , 255), "PLAYING", p5, 30, "Arial")
-
-        #SETTING
-        p1 = Vector2(250, 200)  # Point en haut a gauche a editer
-        p2 = Vector2(p1.x, p1.y + buttomHeight)
-        p3 = Vector2(p1.x + buttomWidth, p1.y + buttomHeight)
-        p4 = Vector2(p1.x + buttomWidth, p1.y)
-        p5 = Vector2(p1.x + 200, p1.y + 10)  # Text position
-
-        #core.Draw.polygon((255, 255, 255), ((p1), (p2), (p3), (p4)))
-        #core.Draw.text((255, 0, 255), "SETTING", p5, 30, "Arial")
-
-        # EXIT
-        p1 = Vector2(250, 300)  # Point en haut a gauche a editer
-        p2 = Vector2(p1.x, p1.y + buttomHeight)
-        p3 = Vector2(p1.x + buttomWidth, p1.y + buttomHeight)
-        p4 = Vector2(p1.x + buttomWidth, p1.y)
-        p5 = Vector2(p1.x + 220, p1.y + 10)  # Text position
-
-        #core.Draw.polygon((255, 255, 255), ((p1), (p2), (p3), (p4)))
-        #core.Draw.text((255, 0, 255), "EXIT", p5, 30, "Arial")
-
     if core.memory("screen").__eq__(Screen.Screen.INGAME):
         pass
 
