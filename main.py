@@ -92,6 +92,23 @@ def run():
     if core.getMouseLeftClick():
         core.getMouseLeftClick()
         print(pygame.mouse.get_pos())
+
+        # Buttom START
+        if 330 < pygame.mouse.get_pos()[0] < 650 and 110 < pygame.mouse.get_pos()[1] < 200:
+            print("START")
+            core.memory("screen", Screen.Screen.INGAME)
+            core.mouseclickL = False
+
+        # Buttom SETTING
+        if 290 < pygame.mouse.get_pos()[0] < 700 and 200 < pygame.mouse.get_pos()[1] < 290:
+            print("SETTING")
+            core.memory("screen", Screen.Screen.SETTING)
+            core.mouseclickL = False
+
+        #Buttom EXIT
+        if 350 < pygame.mouse.get_pos()[0] < 650 and 300 < pygame.mouse.get_pos()[1] < 390:
+            print("EXIT")
+            sys.exit()
         pass
 
 
