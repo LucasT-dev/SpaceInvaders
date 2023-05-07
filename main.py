@@ -6,11 +6,9 @@ from pygame import Vector2
 
 import core
 from SpaceInvader import Screen
+from SpaceInvader.Vaisseau import Vaisseau
 
-
-# Press Maj+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
+#https://www.crazygames.fr/jeu/space-invaders
 
 def setup():
     print("Setup START---------")
@@ -20,11 +18,19 @@ def setup():
     core.setBgColor((255, 255, 255))
     core.setTitle("Space Invaders")
 
+    core.memory("vaisseau", Vaisseau())
+
     # core.memory("texture", core.Texture("./ressource/img.png", Vector2(-200, -200), 0, (1000, 1000)))
     core.memory("textureP", core.Texture("./SpaceInvader/ressource/Play.png", Vector2(320, 100), 0, (1500, 1000)))
     core.memory("textureS", core.Texture("./SpaceInvader/ressource/Setting.png", Vector2(280, 200), 0, (1500, 1000)))
     core.memory("textureE", core.Texture("./SpaceInvader/ressource/Exit.png", Vector2(340, 300), 0, (1500, 1000)))
+    core.memory("textureV", core.Texture("./SpaceInvader/ressource/PlayerVaisseau.png", Vector2(500, 700), 0, (70, 70)))
 
+def edge(j):
+    if j.position.x < 0:
+        j.position.x = 0
+    if j.position.x > core.WINDOW_SIZE[0]-30:
+        j.position.x = core.WINDOW_SIZE[0]-30
 
 def run():
     core.cleanScreen()
@@ -44,8 +50,28 @@ def run():
         core.memory("textureE").show()
 
     if core.memory("screen").__eq__(Screen.Screen.INGAME.value):
-        print(core.memory("screen"))
-        core.Draw.circle((155, 155, 155), Vector2(500, 500), 200)
+
+        core.setBgColor((0, 0, 0))
+
+        core.Draw.text((255, 255, 255), "Score :" + str(core.memory("vaisseau").score), Vector2(800, 20), 25, "Arial")
+        core.Draw.text((255, 255, 255), "LifePoint :" + str(core.memory("vaisseau").lifePoint), Vector2(800, 45), 25, "Arial")
+        core.Draw.text((255, 255, 255), "Position :" + str(core.memory("vaisseau").position), Vector2(800, 70), 25, "Arial")
+
+        keys = pygame.key.get_pressed()
+
+        #Control
+        if keys[pygame.K_LEFT]:
+            core.memory("vaisseau").moveLeft()
+        if keys[pygame.K_RIGHT]:
+            core.memory("vaisseau").moveRight()
+
+        edge(core.memory("vaisseau"))
+
+        core.memory("vaisseau").show()
+
+        if not core.memory("textureV").ready:
+            core.memory("textureV").load()
+        core.memory("textureV").show()
 
     if core.memory("screen").__eq__(Screen.Screen.SETTING.value):
 
