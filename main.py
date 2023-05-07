@@ -15,7 +15,7 @@ def setup():
     core.WINDOW_SIZE = [1000, 800]
     core.fps = 60
     core.memory("screen", Screen.Screen.MAIN.value)
-    core.setBgColor((255, 255, 255))
+    core.setBgColor((0, 0, 0))
     core.setTitle("Space Invaders")
 
     core.memory("vaisseau", Vaisseau())
