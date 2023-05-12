@@ -6,6 +6,7 @@ from pygame import Vector2
 
 import core
 from SpaceInvader import Screen
+from SpaceInvader.Projectile import Projectile
 from SpaceInvader.Vaisseau import Vaisseau
 
 #https://www.crazygames.fr/jeu/space-invaders
@@ -57,13 +58,32 @@ def run():
         core.Draw.text((255, 255, 255), "LifePoint :" + str(core.memory("vaisseau").lifePoint), Vector2(800, 45), 25, "Arial")
         core.Draw.text((255, 255, 255), "Position :" + str(core.memory("vaisseau").position), Vector2(800, 70), 25, "Arial")
 
+        for i in core.memory("projectile"):
+
+            if (i.position.y < 10):
+                core.memory("projectile").remove(i)
+
+            i.update()
+            i.draw()
+
+
         keys = pygame.key.get_pressed()
+        keys1 = core.getkeyPress()
+
+        print(keys1)
 
         #Control
         if keys[pygame.K_LEFT]:
             core.memory("vaisseau").moveLeft()
         if keys[pygame.K_RIGHT]:
             core.memory("vaisseau").moveRight()
+
+        if keys1 and keys[pygame.K_SPACE]:
+            print("LAUNCH projectile")
+            core.keyPress = False
+
+            if (len(core.memory("projectile")) < 5 ):
+                core.memory("projectile").append(Projectile(Vector2(core.memory("vaisseau").position.x+32, core.memory("vaisseau").position.y)))
 
         edge(core.memory("vaisseau"))
 
