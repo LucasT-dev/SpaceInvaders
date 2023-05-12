@@ -8,6 +8,8 @@ import core
 from SpaceInvader import Screen
 from SpaceInvader.Projectile import Projectile
 from SpaceInvader.Vaisseau import Vaisseau
+from SpaceInvader.Wall import Wall
+
 
 #https://www.crazygames.fr/jeu/space-invaders
 
@@ -22,6 +24,8 @@ def setup():
     core.memory("vaisseau", Vaisseau())
 
     core.memory("projectile", [])
+
+    core.memory("wall", [])
 
     mixer.init()
     # Loading the song
@@ -69,12 +73,26 @@ def run():
         core.Draw.text((255, 255, 255), "LifePoint :" + str(core.memory("vaisseau").lifePoint), Vector2(800, 45), 25, "Arial")
         core.Draw.text((255, 255, 255), "Position :" + str(core.memory("vaisseau").position), Vector2(800, 70), 25, "Arial")
 
+        for i in core.memory("wall"):
+            i.draw()
+
         for i in core.memory("projectile"):
 
             if (i.position.y < 10):
                 core.memory("projectile").remove(i)
 
             i.update()
+
+            for j in core.memory("wall"):
+
+                d = Vector2.distance_to(i.position, j.position)
+
+                if (d < 10):
+                    print("INFERIEUR A 10 = " + str(d))
+
+                    core.memory("projectile").remove(i)
+                    core.memory("wall").remove(j)
+
             i.draw()
 
 
@@ -127,6 +145,15 @@ def run():
             print("START")
             core.memory("screen", Screen.Screen.INGAME.value)
             core.mouseclickL = False
+
+            n = 10
+            l = 1000
+            d = (l/n)
+            d1 = (l/n) - (l/n)/2
+
+            for i in range(n):
+                core.memory("wall").append(Wall(Vector2((((i+1)*d)-d1, 600))))
+
 
         # Bottom SETTING
         if 290 < pygame.mouse.get_pos()[0] < 700 and 200 < pygame.mouse.get_pos()[1] < 290:
