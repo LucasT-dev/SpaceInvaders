@@ -2,7 +2,7 @@
 import sys
 
 import pygame
-from pygame import Vector2
+from pygame import Vector2, mixer
 
 import core
 from SpaceInvader import Screen
@@ -20,6 +20,17 @@ def setup():
     core.setTitle("Space Invaders")
 
     core.memory("vaisseau", Vaisseau())
+
+    core.memory("projectile", [])
+
+    mixer.init()
+    # Loading the song
+    mixer.music.load("./SpaceInvader/ressource/song.mp3")
+    # Setting the volume
+    mixer.music.set_volume(0.7)
+    # Start playing the song
+    mixer.music.play(-1)
+
 
     # core.memory("texture", core.Texture("./ressource/img.png", Vector2(-200, -200), 0, (1000, 1000)))
     core.memory("textureP", core.Texture("./SpaceInvader/ressource/Play.png", Vector2(320, 100), 0, (1500, 1000)))
