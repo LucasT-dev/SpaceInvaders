@@ -88,7 +88,6 @@ def run():
                 d = Vector2.distance_to(i.position, j.position)
 
                 if (d < 10):
-                    print("INFERIEUR A 10 = " + str(d))
 
                     core.memory("projectile").remove(i)
                     core.memory("wall").remove(j)
@@ -112,7 +111,7 @@ def run():
             core.keyPress = False
 
             if (len(core.memory("projectile")) < 5 ):
-                core.memory("projectile").append(Projectile(Vector2(core.memory("vaisseau").position.x+32, core.memory("vaisseau").position.y)))
+                core.memory("projectile").append(Projectile(Vector2(core.memory("vaisseau").position.x+32, core.memory("vaisseau").position.y), 5))
 
         edge(core.memory("vaisseau"))
 
