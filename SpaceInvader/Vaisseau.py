@@ -18,11 +18,11 @@ class Vaisseau:
         self.position = Vector2(500, 700)
 
     def moveRight(self):
-        self.position.x = self.position.x + 10
+        self.position.x = self.position.x + 7
         core.memory("textureV").pos = self.position
 
     def moveLeft(self):
-        self.position.x = self.position.x - 10
+        self.position.x = self.position.x - 7
         core.memory("textureV").pos = self.position
 
     def show(self):
