@@ -6,6 +6,7 @@ from pygame import Vector2, mixer
 
 import core
 from SpaceInvader import Screen
+from SpaceInvader.Enemies import Enemies
 from SpaceInvader.Projectile import Projectile
 from SpaceInvader.Vaisseau import Vaisseau
 from SpaceInvader.Wall import Wall
@@ -24,8 +25,10 @@ def setup():
     core.memory("vaisseau", Vaisseau())
 
     core.memory("projectile", [])
+    core.memory("Eprojectile", [])
 
     core.memory("wall", [])
+    core.memory("enemies", [])
 
     mixer.init()
     # Loading the song
@@ -41,6 +44,8 @@ def setup():
     core.memory("textureS", core.Texture("./SpaceInvader/ressource/Setting.png", Vector2(280, 200), 0, (1500, 1000)))
     core.memory("textureE", core.Texture("./SpaceInvader/ressource/Exit.png", Vector2(340, 300), 0, (1500, 1000)))
     core.memory("textureV", core.Texture("./SpaceInvader/ressource/PlayerVaisseau.png", Vector2(500, 700), 0, (70, 70)))
+    core.memory("textureRed_En", core.Texture("./SpaceInvader/ressource/Red_En.png", Vector2(0, 0), 10, (70, 70)))
+    core.memory("textureGreen_En", core.Texture("./SpaceInvader/ressource/Green_En.png", Vector2(0, 0), 10, (70, 70)))
 
 def edge(j):
     if j.position.x < 0:
@@ -67,6 +72,16 @@ def run():
 
     if core.memory("screen").__eq__(Screen.Screen.INGAME.value):
 
+        if not core.memory("textureV").ready:
+            core.memory("textureV").load()
+        core.memory("textureV").show()
+
+        if not core.memory("textureRed_En").ready:
+            core.memory("textureRed_En").load()
+
+        if not core.memory("textureGreen_En").ready:
+            core.memory("textureGreen_En").load()
+
         core.setBgColor((0, 0, 0))
 
         core.Draw.text((255, 255, 255), "Score :" + str(core.memory("vaisseau").score), Vector2(800, 20), 25, "Arial")
@@ -76,13 +91,21 @@ def run():
         for i in core.memory("wall"):
             i.draw()
 
+        for i in core.memory("enemies"):
+            i.draw()
+            #enemies launch projectile
+
+        for i in core.memory("Eprojectile"):
+            i.moveEnemiesProjectile()
+
         for i in core.memory("projectile"):
 
             if (i.position.y < 10):
                 core.memory("projectile").remove(i)
 
-            i.update()
+            i.movePlayerProjectile()
 
+            # player projectil shut walls
             for j in core.memory("wall"):
 
                 d = Vector2.distance_to(i.position, j.position)
@@ -92,8 +115,27 @@ def run():
                     core.memory("projectile").remove(i)
                     core.memory("wall").remove(j)
 
-            i.draw()
+            #player projectil shut enemies
+            for k in core.memory("enemies"):
 
+                d = Vector2.distance_to(i.position, k.position)
+
+                if (d < 10):
+
+                    core.memory("projectile").remove(i)
+                    core.memory("enemies").remove(k)
+
+                    core.memory("vaisseau").addPoint(k.lifePoint)
+
+            for l in core.memory("Eprojectile"):
+
+                d = Vector2.distance_to(i.position, l.position)
+
+                if (d < 10):
+                    core.memory("projectile").remove(i)
+                    core.memory("Eprojectile").remove(j)
+
+            i.draw()
 
         keys = pygame.key.get_pressed()
         keys1 = core.getkeyPress()
@@ -115,11 +157,6 @@ def run():
 
         edge(core.memory("vaisseau"))
 
-        core.memory("vaisseau").show()
-
-        if not core.memory("textureV").ready:
-            core.memory("textureV").load()
-        core.memory("textureV").show()
 
     if core.memory("screen").__eq__(Screen.Screen.SETTING.value):
 
@@ -145,6 +182,7 @@ def run():
             core.memory("screen", Screen.Screen.INGAME.value)
             core.mouseclickL = False
 
+            #Wall
             n = 10
             l = 1000
             d = (l/n)
@@ -152,6 +190,24 @@ def run():
 
             for i in range(n):
                 core.memory("wall").append(Wall(Vector2((((i+1)*d)-d1, 600))))
+
+            #Enemies
+            n = 13
+            l = 1000
+            d = (l / n)
+            d1 = (l / n) - (l / n) / 2
+
+            for i in range(n):
+                core.memory("enemies").append(Enemies(Vector2((((i + 1) * d) - d1, 200)), core.memory("textureRed_En"), 10))
+
+            n = 10
+            l = 1000
+            d = (l / n)
+            d1 = (l / n) - (l / n) / 2
+
+            for i in range(n):
+                core.memory("enemies").append(Enemies(Vector2((((i + 1) * d) - d1, 300)), core.memory("textureGreen_En"), 20))
+
 
 
         # Bottom SETTING
