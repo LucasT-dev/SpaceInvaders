@@ -9,10 +9,13 @@ class Projectile:
         self.position = position
         self.color = (255, 255, 255)
 
-    def update(self):
+    def movePlayerProjectile(self):
 
         self.position = Vector2(self.position.x, self.position.y - self.speed)
 
+    def moveEnemiesProjectile(self):
+
+        self.position = Vector2(self.position.x, self.position.y + self.speed)
 
     def draw(self):
 
