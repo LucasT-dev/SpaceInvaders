@@ -3,11 +3,11 @@ from pygame import Vector2
 import core
 class Projectile:
 
-    def __init__(self, position, speed):
+    def __init__(self, position, speed, color):
         self.speed = speed
         self.length = 3
         self.position = position
-        self.color = (255, 255, 255)
+        self.color = color
 
     def movePlayerProjectile(self):
 
