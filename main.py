@@ -201,7 +201,7 @@ def run():
         if keys1 and keys[pygame.K_SPACE]:
             core.keyPress = False
 
-            if len(core.memory("projectile") < 5):
+            if len(core.memory("projectile")) < 5:
                 core.memory("projectile").append(
                     Projectile(Vector2(core.memory("vaisseau").position.x + 32, core.memory("vaisseau").position.y), 5,
                                (0, 0, 255)))
