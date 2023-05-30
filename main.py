@@ -1,5 +1,6 @@
 # This is a sample Python script.
 import sys
+import time
 from random import randrange
 
 import pygame
@@ -40,10 +41,10 @@ def setup():
     #mixer.music.play(-1)
 
     # core.memory("texture", core.Texture("./ressource/img.png", Vector2(-200, -200), 0, (1000, 1000)))
-    core.memory("textureP", core.Texture("./SpaceInvader/ressource/Logo.png", Vector2(320, 100), 0, (100, 100)))
-    core.memory("textureP", core.Texture("./SpaceInvader/ressource/Play.png", Vector2(320, 300), 0, (1500, 1000)))
-    core.memory("textureS", core.Texture("./SpaceInvader/ressource/Setting.png", Vector2(280, 400), 0, (1500, 1000)))
-    core.memory("textureE", core.Texture("./SpaceInvader/ressource/Exit.png", Vector2(340, 500), 0, (1500, 1000)))
+    core.memory("textureL", core.Texture("./SpaceInvader/ressource/Logo.png", Vector2(260, 25), 0, (500, 350)))
+    core.memory("textureP", core.Texture("./SpaceInvader/ressource/Play.png", Vector2(330, 450), 0, (1500, 1000)))
+    core.memory("textureS", core.Texture("./SpaceInvader/ressource/Setting.png", Vector2(280, 575), 0, (1500, 1000)))
+    core.memory("textureE", core.Texture("./SpaceInvader/ressource/Exit.png", Vector2(340, 700), 0, (1500, 1000)))
     core.memory("textureV", core.Texture("./SpaceInvader/ressource/PlayerVaisseau.png", Vector2(500, 700), 0, (70, 70)))
     core.memory("textureRed_En", core.Texture("./SpaceInvader/ressource/Red_En.png", Vector2(0, 0), 10, (70, 70)))
     core.memory("textureGreen_En", core.Texture("./SpaceInvader/ressource/Green_En.png", Vector2(0, 0), 10, (70, 70)))
@@ -67,10 +68,10 @@ def launchGame():
         core.memory("wall").append(Wall(Vector2((((i + 1) * d) - d1, 600))))
 
     # Enemies
-    n = randrange(15)
+    n = randrange(1, 15)
     l = 1000
     d = (l / n)
-    d1 = (l / n) - (l / n) / 2
+    d1 = d - (d / 2)
 
     for i in range(n):
         core.memory("enemies").append(Enemies(Vector2((((i + 1) * d) - d1, 200)), core.memory("textureRed_En"), 10, 3))
@@ -87,7 +88,18 @@ def launchGame():
 def run():
     core.cleanScreen()
 
+    starttime = time.time()
+    while True:
+        print("tick")
+        if (time.time() - starttime) % 60.0:
+            print(time.time() - starttime)
+
+        #time.sleep(60.0 - ((time.time() - starttime) % 60.0))
+
     if core.memory("screen").__eq__(Screen.Screen.MAIN.value):
+        if not core.memory("textureL").ready:
+            core.memory("textureL").load()
+        core.memory("textureL").show()
 
         if not core.memory("textureP").ready:
             core.memory("textureP").load()
