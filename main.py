@@ -5,10 +5,12 @@ from random import randrange
 
 import pygame
 from pygame import Vector2, mixer
+from pygame.rect import Rect
 
 import core
 from SpaceInvader import Screen
 from SpaceInvader.Enemies import Enemies
+from SpaceInvader.Partie import Partie
 from SpaceInvader.Projectile import Projectile
 from SpaceInvader.Vaisseau import Vaisseau
 from SpaceInvader.Wall import Wall
@@ -18,12 +20,14 @@ from SpaceInvader.Wall import Wall
 
 def setup():
     print("Setup START---------")
+
+    core.memory("partie", Partie())
+
     core.WINDOW_SIZE = [1000, 800]
     core.fps = 60
-    core.memory("screen", Screen.Screen.MAIN.value)
-    core.setBgColor((0, 0, 0))
     core.setTitle("Space Invaders")
 
+    core.memory("screen", Screen.Screen.MENU.value)
     core.memory("vaisseau", Vaisseau())
 
     core.memory("projectile", [])
@@ -56,200 +60,133 @@ def edge(j):
     if j.position.x > core.WINDOW_SIZE[0] - 30:
         j.position.x = core.WINDOW_SIZE[0] - 30
 
-
-def launchGame():
-    # Wall
-    n = 10
-    l = 1000
-    d = (l / n)
-    d1 = (l / n) - (l / n) / 2
-
-    for i in range(n):
-        core.memory("wall").append(Wall(Vector2((((i + 1) * d) - d1, 600))))
-
-    # Enemies
-    n = randrange(1, 15)
-    l = 1000
-    d = (l / n)
-    d1 = d - (d / 2)
-
-    for i in range(n):
-        core.memory("enemies").append(Enemies(Vector2((((i + 1) * d) - d1, 200)), core.memory("textureRed_En"), 10, 3))
-
-    n = randrange(12)
-    l = 1000
-    d = (l / n)
-    d1 = (l / n) - (l / n) / 2
-
-    for i in range(n):
-        core.memory("enemies").append(Enemies(Vector2((((i + 1) * d) - d1, 300)), core.memory("textureGreen_En"), 5, 5))
-
-
 def run():
     core.cleanScreen()
 
-    starttime = time.time()
-    while True:
-        print("tick")
-        if (time.time() - starttime) % 60.0:
-            print(time.time() - starttime)
+    core.memory("partie").update()
 
-        #time.sleep(60.0 - ((time.time() - starttime) % 60.0))
+    ##lorsque tout les ennemies ont été tué on n'en remet
+    if len(core.memory("enemies")) == 0:
+          core.memory("partie").end()
 
-    if core.memory("screen").__eq__(Screen.Screen.MAIN.value):
-        if not core.memory("textureL").ready:
-            core.memory("textureL").load()
-        core.memory("textureL").show()
+    for i in core.memory("wall"):
+        i.draw()
 
-        if not core.memory("textureP").ready:
-            core.memory("textureP").load()
-        core.memory("textureP").show()
+    for i in core.memory("enemies"):
 
-        if not core.memory("textureS").ready:
-            core.memory("textureS").load()
-        core.memory("textureS").show()
+        i.draw()
+        i.launchProjectile()
+        # enemies launch projectile
 
-        if not core.memory("textureE").ready:
-            core.memory("textureE").load()
-        core.memory("textureE").show()
+    for i in core.memory("Eprojectile"):
+        i.draw()
+        i.moveEnemiesProjectile()
 
-    if core.memory("screen").__eq__(Screen.Screen.INGAME.value):
+        for j in core.memory("wall"):
 
-        if not core.memory("textureV").ready:
-            core.memory("textureV").load()
-        core.memory("textureV").show()
+            d = Vector2.distance_to(i.position, j.position)
 
-        if not core.memory("textureRed_En").ready:
-            core.memory("textureRed_En").load()
-
-        if not core.memory("textureGreen_En").ready:
-            core.memory("textureGreen_En").load()
-
-        core.setBgColor((0, 0, 0))
-
-        core.Draw.text((255, 255, 255), "Score :" + str(core.memory("vaisseau").score), Vector2(800, 20), 25, "Arial")
-        core.Draw.text((255, 255, 255), "LifePoint :" + str(core.memory("vaisseau").lifePoint), Vector2(800, 45), 25, "Arial")
-        core.Draw.text((255, 255, 255), "Position :" + str(core.memory("vaisseau").position), Vector2(800, 70), 25, "Arial")
-
-        ##lorsque tout les ennemies ont été tué on n'en remet
-        if len(core.memory("enemies")) == 0:
-            launchGame()
-
-        for i in core.memory("wall"):
-            i.draw()
-
-        for i in core.memory("enemies"):
-
-            i.draw()
-            i.launchProjectile()
-            # enemies launch projectile
-
-        for i in core.memory("Eprojectile"):
-            i.draw()
-            i.moveEnemiesProjectile()
-
-            for j in core.memory("wall"):
-
-                d = Vector2.distance_to(i.position, j.position)
-
-                if (d < 10):
-                    core.memory("Eprojectile").remove(i)
-                    core.memory("wall").remove(j)
-
-            d = Vector2.distance_to(i.position, core.memory("vaisseau").position)
-
-            if (d < 20):
-                core.memory("screen", Screen.Screen.GAMEOVER.value)
-
-            if i.position.y > 800:
+            if (d < 10):
                 core.memory("Eprojectile").remove(i)
+                core.memory("wall").remove(j)
 
-        for i in core.memory("projectile"):
+        d = Vector2.distance_to(i.position, core.memory("vaisseau").position)
 
-            i.movePlayerProjectile()
+        if (d < 20):
+            core.memory("screen", Screen.Screen.GAMEOVER.value)
 
-            if i.position.y < 10:
+        if i.position.y > 800:
+            core.memory("Eprojectile").remove(i)
+
+    for i in core.memory("projectile"):
+
+        i.movePlayerProjectile()
+
+        if i.position.y < 10:
+            core.memory("projectile").remove(i)
+
+        # player projectil shot walls
+        for j in core.memory("wall"):
+
+            d = Vector2.distance_to(i.position, j.position)
+
+            if d < 10:
                 core.memory("projectile").remove(i)
+                core.memory("wall").remove(j)
 
-            # player projectil shot walls
-            for j in core.memory("wall"):
+        # player projectile shot enemies
+        for k in core.memory("enemies"):
 
-                d = Vector2.distance_to(i.position, j.position)
+            d = Vector2.distance_to(i.position, k.position)
 
-                if d < 10:
-                    core.memory("projectile").remove(i)
-                    core.memory("wall").remove(j)
+            if d < 10:
+                core.memory("projectile").remove(i)
+                core.memory("enemies").remove(k)
 
-            # player projectile shot enemies
-            for k in core.memory("enemies"):
+                core.memory("vaisseau").addPoint(k.lifePoint)
 
-                d = Vector2.distance_to(i.position, k.position)
+        # player projectile shot enemies projectile
+        for l in core.memory("Eprojectile"):
 
-                if d < 10:
-                    core.memory("projectile").remove(i)
-                    core.memory("enemies").remove(k)
+            d = Vector2.distance_to(i.position, l.position)
 
-                    core.memory("vaisseau").addPoint(k.lifePoint)
+            if d < 7:
+                core.memory("projectile").remove(i)
+                core.memory("Eprojectile").remove(l)
 
-            # player projectile shot enemies projectile
-            for l in core.memory("Eprojectile"):
+        i.draw()
 
-                d = Vector2.distance_to(i.position, l.position)
+    keys = pygame.key.get_pressed()
+    keys1 = core.getkeyPress()
 
-                if d < 7:
-                    core.memory("projectile").remove(i)
-                    core.memory("Eprojectile").remove(l)
+    # Control
+    if keys[pygame.K_LEFT]:
+        core.memory("vaisseau").moveLeft()
+    if keys[pygame.K_RIGHT]:
+        core.memory("vaisseau").moveRight()
 
-            i.draw()
+    if keys1 and keys[pygame.K_SPACE]:
+        core.keyPress = False
 
-        keys = pygame.key.get_pressed()
-        keys1 = core.getkeyPress()
+    edge(core.memory("vaisseau"))
 
-        # Control
-        if keys[pygame.K_LEFT]:
-            core.memory("vaisseau").moveLeft()
-        if keys[pygame.K_RIGHT]:
-            core.memory("vaisseau").moveRight()
+    startButton = Rect(330, 450, 335, 100)
+    core.Draw.rect((0, 0, 255,0), startButton)
 
-        if keys1 and keys[pygame.K_SPACE]:
-            core.keyPress = False
+    settingButton = Rect(280, 575, 430, 90)
+    core.Draw.rect((255, 0, 0,0), settingButton)
 
-            if len(core.memory("projectile")) < 5:
-                core.memory("projectile").append(
-                    Projectile(Vector2(core.memory("vaisseau").position.x + 32, core.memory("vaisseau").position.y), 5,
-                               (0, 0, 255)))
-
-        edge(core.memory("vaisseau"))
-
-    if core.memory("screen").__eq__(Screen.Screen.SETTING.value):
-
-        if not core.memory("textureE").ready:
-            core.memory("textureE").load()
-        core.memory("textureE").show()
-
-    if core.memory("screen").__eq__(Screen.Screen.GAMEOVER.value):
-
-        core.Draw.text((255, 137, 0), "GAME OVER : ", Vector2(350, 100), 70, "Script MT Bold")
-        core.Draw.text((255, 255, 255), "SCORE : " + str(core.memory("vaisseau").score), Vector2(450, 200), 30, "Arial")
-
-        if not core.memory("textureE").ready:
-            core.memory("textureE").load()
-        core.memory("textureE").show()
-
+    exitButton = Rect(350, 700, 300, 90)
+    core.Draw.rect((0, 255, 0,0), exitButton)
 
     # MAIN
-    if core.getMouseLeftClick() and core.memory("screen").__eq__(Screen.Screen.MAIN.value):
+    if core.getMouseLeftClick() and core.memory("screen").__eq__(Screen.Screen.MENU.value):
         core.getMouseLeftClick()
         print(pygame.mouse.get_pos())
 
+        if startButton.collidepoint(core.getMouseLeftClick()):
+            print("START")
+            core.memory("screen", Screen.Screen.INGAME.value)
+            core.mouseclickL = False
+
+        if settingButton.collidepoint(core.getMouseLeftClick()):
+            print("SETTING")
+            core.memory("screen", Screen.Screen.SETTING.value)
+            core.mouseclickL = False
+
+        if exitButton.collidepoint(core.getMouseLeftClick()):
+            print("EXIT")
+            sys.exit()
         # Bottom START
+
+
+
         if 330 < pygame.mouse.get_pos()[0] < 650 and 110 < pygame.mouse.get_pos()[1] < 200:
             print("START")
             core.memory("screen", Screen.Screen.INGAME.value)
             core.mouseclickL = False
 
-            launchGame()
-
+            core.memory("partie").start
         # Bottom SETTING
         if 290 < pygame.mouse.get_pos()[0] < 700 and 200 < pygame.mouse.get_pos()[1] < 290:
             print("SETTING")
@@ -266,7 +203,7 @@ def run():
 
         if 350 < pygame.mouse.get_pos()[0] < 650 and 300 < pygame.mouse.get_pos()[1] < 390:
             print("EXIT2")
-            core.memory("screen", Screen.Screen.MAIN.value)
+            core.memory("screen", Screen.Screen.MENU.value)
             core.mouseclickL = False
 
     # GAME OVER
@@ -274,7 +211,7 @@ def run():
 
         if 350 < pygame.mouse.get_pos()[0] < 650 and 300 < pygame.mouse.get_pos()[1] < 390:
             print("EXIT2")
-            core.memory("screen", Screen.Screen.MAIN.value)
+            core.memory("screen", Screen.Screen.MENU.value)
             core.memory("vaisseau").score = 0
             core.memory("projectile").clear()
             core.memory("Eprojectile").clear()
