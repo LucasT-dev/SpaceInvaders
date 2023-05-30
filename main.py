@@ -31,18 +31,19 @@ def setup():
     core.memory("wall", [])
     core.memory("enemies", [])
 
-    mixer.init()
+    #mixer.init()
     # Loading the song
-    mixer.music.load("./SpaceInvader/ressource/song.mp3")
+    #mixer.music.load("./SpaceInvader/ressource/song.mp3")
     # Setting the volume
-    mixer.music.set_volume(0.7)
+    #mixer.music.set_volume(0.7)
     # Start playing the song
-    mixer.music.play(-1)
+    #mixer.music.play(-1)
 
     # core.memory("texture", core.Texture("./ressource/img.png", Vector2(-200, -200), 0, (1000, 1000)))
-    core.memory("textureP", core.Texture("./SpaceInvader/ressource/Play.png", Vector2(320, 100), 0, (1500, 1000)))
-    core.memory("textureS", core.Texture("./SpaceInvader/ressource/Setting.png", Vector2(280, 200), 0, (1500, 1000)))
-    core.memory("textureE", core.Texture("./SpaceInvader/ressource/Exit.png", Vector2(340, 300), 0, (1500, 1000)))
+    core.memory("textureP", core.Texture("./SpaceInvader/ressource/Logo.png", Vector2(320, 100), 0, (100, 100)))
+    core.memory("textureP", core.Texture("./SpaceInvader/ressource/Play.png", Vector2(320, 300), 0, (1500, 1000)))
+    core.memory("textureS", core.Texture("./SpaceInvader/ressource/Setting.png", Vector2(280, 400), 0, (1500, 1000)))
+    core.memory("textureE", core.Texture("./SpaceInvader/ressource/Exit.png", Vector2(340, 500), 0, (1500, 1000)))
     core.memory("textureV", core.Texture("./SpaceInvader/ressource/PlayerVaisseau.png", Vector2(500, 700), 0, (70, 70)))
     core.memory("textureRed_En", core.Texture("./SpaceInvader/ressource/Red_En.png", Vector2(0, 0), 10, (70, 70)))
     core.memory("textureGreen_En", core.Texture("./SpaceInvader/ressource/Green_En.png", Vector2(0, 0), 10, (70, 70)))
