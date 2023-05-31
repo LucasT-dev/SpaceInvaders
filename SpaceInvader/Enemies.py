@@ -33,27 +33,24 @@ class Enemies:
             if Vector2.distance_to(self.position, core.memory("vaisseau").position) < 600:
 
                 j = randrange(100)
-
-                if self.speedProjectile == 5:
-                    if j > 65:
-                        core.memory("Eprojectile").append(
-                            Projectile(Vector2(self.position.x, self.position.y), self.speedProjectile, (0, 255, 0)))
-
-                if self.speedProjectile == 3:
-                    if j > 35:
-                        core.memory("Eprojectile").append(
-                            Projectile(Vector2(self.position.x, self.position.y), self.speedProjectile, (255, 0, 0)))
+                if j > 65:
+                    self.addProjectile()
 
     def addProjectile(self):
-        if len(self.projectile) < 5:
-            self.projectile.append(
-                Projectile(Vector2(core.memory("vaisseau").position.x + 32, core.memory("vaisseau").position.y), 5,
-                           (0, 0, 255)))
 
+        self.projectile.append(
+            Projectile(Vector2(self.position.x + 32, self.position.y), 5,
+                       (0, 0, 255)))
+
+    def update(self):
+
+        self.draw()
+        self.launchProjectile()
+
+        self.updateProjectile()
 
     def updateProjectile(self):
 
-        if len(self.projectile) < 1:
-            for i in self.projectile:
-                i.position = Vector2(i.position.x + self.speed, i.position.y + self.speed)
-                i.draw()
+        for i in self.projectile:
+            i.position = Vector2(i.position.x, i.position.y + self.speedProjectile)
+            i.draw()

@@ -18,6 +18,5 @@ class Projectile:
         self.position = Vector2(self.position.x, self.position.y + self.speed)
 
     def draw(self):
-
-        core.Draw.rect(self.color,
-                           (self.position.x, self.position.y, 10, 20))
+        print("DRAW")
+        core.Draw.rect(self.color,(self.position.x, self.position.y, 10, 20))
