@@ -1,6 +1,8 @@
 from pygame import Vector2
 
 import core
+
+
 class Projectile:
 
     def __init__(self, position, speed, color):
@@ -18,5 +20,4 @@ class Projectile:
         self.position = Vector2(self.position.x, self.position.y + self.speed)
 
     def draw(self):
-        print("DRAW")
         core.Draw.rect(self.color,(self.position.x, self.position.y, 10, 20))

@@ -2,6 +2,7 @@ from datetime import datetime
 from random import randrange
 
 from pygame import Vector2, time
+from pygame.rect import Rect
 
 import core
 from SpaceInvader import Screen
@@ -45,16 +46,65 @@ class Partie:
             core.memory("enemies").append(
                 Enemies(Vector2((((i + 1) * d) - d1, 300)), core.memory("textureGreen_En"), 5, 5))
 
-
     def end(self):
+        print("END")
+        core.memory("screen", Screen.Screen.GAMEOVER.value)
 
-        pass
+    def collide(self):
+
+        for i in core.memory("vaisseau").projectile:
+
+            vaisseauRect = Rect(i.position.x, i.position.y, 10, 20)
+            #core.Draw.rect((255, 255, 255, 150), vaisseauRect)
+
+            for j in core.memory("wall"):
+
+                wallRect = Rect(j.position.x, j.position.y, 10, 10)
+                #core.Draw.rect(j.color, wallRect)
+
+                if (vaisseauRect.colliderect(wallRect)):
+                    core.memory("vaisseau").removeProjectile(i)
+                    j.remove()
+
+            for k in core.memory("enemies"):
+
+                enemiesRect = Rect(k.position.x, k.position.y, 20, 10)
+                #core.Draw.rect(k.color, enemiesRect)
+
+                if (vaisseauRect.colliderect(enemiesRect)):
+                    core.memory("vaisseau").removeProjectile(i)
+                    core.memory("vaisseau").addPoint(10)
+                    core.memory("enemies").remove(k)
+
+        for l in core.memory("enemies"):
+
+            for m in l.projectile:
+
+                enemiesProjectileRect = Rect(m.position.x, m.position.y, 10, 20)
+                #core.Draw.rect(m.color, enemiesProjectileRect)
+
+                for n in core.memory("wall"):
+
+                    wallRect = Rect(n.position.x, n.position.y, 10, 10)
+                    #core.Draw.rect(n.color, wallRect)
+
+                    if wallRect.colliderect(enemiesProjectileRect):
+                        l.removeProjectile(m)
+                        n.remove()
+
+                vaisseauRect = Rect(core.memory("vaisseau").position.x + 15, core.memory("vaisseau").position.y + 10, 40, 60)
+                #core.Draw.rect((255, 255, 255, 150), vaisseauRect)
+
+                if vaisseauRect.colliderect(enemiesProjectileRect):
+                     l.removeProjectile(m)
+                     core.memory("vaisseau").removelife()
 
     def update(self):
 
         core.setBgColor((0, 0, 0))
 
         if core.memory("screen").__eq__(Screen.Screen.MENU.value):
+
             if not core.memory("textureL").ready:
                 core.memory("textureL").load()
             core.memory("textureL").show()
@@ -83,6 +133,14 @@ class Partie:
             if not core.memory("textureGreen_En").ready:
                 core.memory("textureGreen_En").load()
 
+
+            core.Draw.text((255, 255, 255), "Score :" + str(core.memory("vaisseau").score), Vector2(800, 20), 25,
+                           "Arial")
+            core.Draw.text((255, 255, 255), "LifePoint :" + str(core.memory("vaisseau").lifePoint), Vector2(800, 45),
+                           25, "Arial")
+            core.Draw.text((255, 255, 255), "Position :" + str(core.memory("vaisseau").position), Vector2(800, 70), 25,
+                           "Arial")
+
         if core.memory("screen").__eq__(Screen.Screen.SETTING.value):
 
             if not core.memory("textureE").ready:
@@ -99,4 +157,4 @@ class Partie:
                 core.memory("textureE").load()
             core.memory("textureE").show()
 
-        self.timer = datetime.second
+        #self.timer = datetime.second

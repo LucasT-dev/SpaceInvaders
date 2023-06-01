@@ -13,7 +13,7 @@ class Vaisseau:
         self.maxSpeed = 5
         self.acc = 2
         self.maxAcc = 3
-        self.lifePoint = 100
+        self.lifePoint = 3
         self.shottingSpeed = 2
         self.shield = False
         self.position = Vector2(500, 700)
@@ -30,8 +30,11 @@ class Vaisseau:
     def addPoint(self, point):
         self.score += point
 
-    def removePoint(self, point):
-        self.score -= point
+    def removelife(self):
+        self.lifePoint -= 1
+
+        if self.lifePoint.__eq__(0):
+            core.memory("partie").end()
 
     def addProjectile(self):
 
@@ -51,7 +54,6 @@ class Vaisseau:
         for i in self.projectile:
             i.position = Vector2(i.position.x + 0, i.position.y - self.speed)
             i.draw()
-            print(i.position)
             if i.position.y < 0:
                 print("y inf 0 ")
                 self.removeProjectile(i)

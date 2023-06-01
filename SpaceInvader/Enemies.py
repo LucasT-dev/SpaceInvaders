@@ -24,6 +24,10 @@ class Enemies:
         self.modele.pos.y = self.position.y
         self.modele.show()
 
+    def remove(self):
+        self.remove()
+
+
     def launchProjectile(self):
 
         i = randrange(100)
@@ -42,6 +46,9 @@ class Enemies:
             Projectile(Vector2(self.position.x + 32, self.position.y), 5,
                        (0, 0, 255)))
 
+    def removeProjectile(self, element):
+        self.projectile.remove(element)
+
     def update(self):
 
         self.draw()
@@ -54,3 +61,6 @@ class Enemies:
         for i in self.projectile:
             i.position = Vector2(i.position.x, i.position.y + self.speedProjectile)
             i.draw()
+
+            if i.position.y > 800:
+                self.removeProjectile(i)

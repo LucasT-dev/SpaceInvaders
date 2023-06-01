@@ -28,7 +28,7 @@ def setup():
     core.setTitle("Space Invaders")
 
     core.memory("screen", Screen.Screen.MENU.value)
-    core.memory("vaisseau", Vaisseau())
+
 
     core.memory("wall", [])
     core.memory("enemies", [])
@@ -58,100 +58,115 @@ def edge(j):
 
 
 def run():
+
     core.cleanScreen()
 
     core.memory("partie").update()
 
-    core.memory("vaisseau").updateProjectile()
+    print(core.memory("screen"))
 
-    ##lorsque tout les ennemies ont été tué on n'en remet
-    if len(core.memory("enemies")) == 0:
-        pass
-        #core.memory("partie").end()
+    if core.memory("screen").__eq__(Screen.Screen.INGAME.value):
 
-    for i in core.memory("wall"):
+        core.memory("vaisseau").updateProjectile()
 
-        i.draw()
+        # Control
+        keys = pygame.key.get_pressed()
+        keys1 = core.getkeyPress()
 
-    for i in core.memory("enemies"):
+        if keys[pygame.K_LEFT]:
+            core.memory("vaisseau").moveLeft()
+        if keys[pygame.K_RIGHT]:
+            core.memory("vaisseau").moveRight()
 
-        enemiesRect = Rect(i.position.x, i.position.y, 20, 12)
-        core.Draw.rect((255, 255, 255, 150), enemiesRect)
-
-        i.update()
-
-    vaisseauRect = Rect(core.memory("vaisseau").position.x + 15, core.memory("vaisseau").position.y + 10, 40, 60)
-    core.Draw.rect((255, 255, 255, 150), vaisseauRect)
-
-    ##Collision
-
-    exitButton = Rect(350, 700, 300, 90)
-    core.Draw.rect((0, 255, 0, 0), exitButton)
+        if keys1 and keys[pygame.K_SPACE]:
+            core.keyPress = False
+            print("SPACE")
+            core.memory("vaisseau").addProjectile()
 
 
-    keys = pygame.key.get_pressed()
-    keys1 = core.getkeyPress()
 
-    # Control
-    if keys[pygame.K_LEFT]:
-        core.memory("vaisseau").moveLeft()
-    if keys[pygame.K_RIGHT]:
-        core.memory("vaisseau").moveRight()
+        ##lorsque tout les ennemies ont été tué on n'en remet
+        if len(core.memory("enemies")) == 0:
+            core.memory("partie").end()
 
-    if keys1 and keys[pygame.K_SPACE]:
-        core.keyPress = False
-        print("SPACE")
-        core.memory("vaisseau").addProjectile()
+        for i in core.memory("wall"):
+            i.draw()
 
-    edge(core.memory("vaisseau"))
+        for i in core.memory("enemies"):
+            i.update()
 
-    startButton = Rect(330, 450, 335, 100)
-    core.Draw.rect((0, 0, 255, 0), startButton)
+        core.memory("partie").collide()
 
-    settingButton = Rect(280, 575, 430, 90)
-    core.Draw.rect((255, 0, 0, 0), settingButton)
+        edge(core.memory("vaisseau"))
 
-    exitButton = Rect(350, 700, 300, 90)
-    core.Draw.rect((0, 255, 0, 0), exitButton)
 
     # MAIN
-    if core.getMouseLeftClick() and core.memory("screen").__eq__(Screen.Screen.MENU.value):
-        core.getMouseLeftClick()
-        print(pygame.mouse.get_pos())
+    if core.memory("screen").__eq__(Screen.Screen.MENU.value):
 
-        if startButton.collidepoint(core.getMouseLeftClick()):
-            print("START")
-            core.memory("screen", Screen.Screen.INGAME.value)
-            core.memory("partie").start()
-            core.mouseclickL = False
+        if core.getMouseLeftClick():
 
-        elif settingButton.collidepoint(core.getMouseLeftClick()):
-            print("SETTING")
-            core.memory("screen", Screen.Screen.SETTING.value)
-            core.mouseclickL = False
+            startButton = Rect(330, 450, 335, 100)
+            core.Draw.rect((0, 0, 255, 0), startButton)
 
-        elif exitButton.collidepoint(core.getMouseLeftClick()):
-            print("EXIT")
-            sys.exit()
-        # Bottom START
+            settingButton = Rect(280, 575, 430, 90)
+            core.Draw.rect((255, 0, 0, 0), settingButton)
+
+            exitButton = Rect(350, 700, 300, 90)
+            core.Draw.rect((0, 255, 0, 0), exitButton)
+
+            if startButton.collidepoint(core.getMouseLeftClick()):
+                print("START")
+                core.memory("vaisseau", Vaisseau())
+                core.memory("screen", Screen.Screen.INGAME.value)
+                core.memory("partie").start()
+                core.mouseclickL = False
+
+            elif settingButton.collidepoint(core.getMouseLeftClick()):
+                print("SETTING")
+                core.memory("screen", Screen.Screen.SETTING.value)
+                core.mouseclickL = False
+
+            elif exitButton.collidepoint(core.getMouseLeftClick()):
+                print("EXIT")
+                sys.exit()
+            # Bottom START
 
     # SETTING
-    if core.getMouseLeftClick() and core.memory("screen").__eq__(Screen.Screen.SETTING.value):
+    if core.memory("screen").__eq__(Screen.Screen.SETTING.value):
+        if core.getMouseLeftClick():
 
-        if exitButton.collidepoint(core.getMouseLeftClick()):
-            print("EXIT2")
-            core.memory("screen", Screen.Screen.MENU.value)
-            core.mouseclickL = False
+            exitButton = Rect(350, 700, 300, 90)
+            core.Draw.rect((0, 255, 0, 0), exitButton)
+
+            if exitButton.collidepoint(core.getMouseLeftClick()):
+                print("EXIT2")
+                core.memory("screen", Screen.Screen.MENU.value)
+                core.mouseclickL = False
 
     # GAME OVER
-    if core.getMouseLeftClick() and core.memory("screen").__eq__(Screen.Screen.GAMEOVER.value):
+    if core.memory("screen").__eq__(Screen.Screen.GAMEOVER.value):
+        if core.getMouseLeftClick():
 
-        if 350 < pygame.mouse.get_pos()[0] < 650 and 300 < pygame.mouse.get_pos()[1] < 390:
-            print("EXIT2")
-            core.memory("screen", Screen.Screen.MENU.value)
-            core.memory("vaisseau").score = 0
-            core.memory("enemies").clear()
-            core.mouseclickL = False
+            exitButton = Rect(350, 700, 300, 90)
+            core.Draw.rect((0, 255, 0, 0), exitButton)
+
+            if exitButton.collidepoint(core.getMouseLeftClick()):
+
+                print("EXIT2")
+
+
+                core.memory("enemies").clear()
+                core.memory("wall").clear()
+
+                core.memory("screen", Screen.Screen.MENU.value)
+
+
+
+
+
+                core.mouseclickL = False
+
+
 
 
 core.main(setup, run)

@@ -10,3 +10,6 @@ class Wall:
 
     def draw(self):
         core.Draw.rect(self.color, (self.position.x, self.position.y, self.height, self.height))
+
+    def remove(self):
+        core.memory("wall").remove(self)
