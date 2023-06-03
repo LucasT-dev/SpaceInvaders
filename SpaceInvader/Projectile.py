@@ -17,7 +17,7 @@ class Projectile:
 
     def moveEnemiesProjectile(self):
 
-        self.position = Vector2(self.position.x, self.position.y + self.speed)
+        self.position = Vector2(self.position.x, self.position.y + (self.speed * core.memory("partie").speedCoef))
 
     def draw(self):
         core.Draw.rect(self.color,(self.position.x, self.position.y, 10, 20))

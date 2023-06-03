@@ -1,7 +1,5 @@
 # This is a sample Python script.
 import sys
-import time
-from random import randrange
 
 import pygame
 from pygame import Vector2, mixer
@@ -9,11 +7,8 @@ from pygame.rect import Rect
 
 import core
 from SpaceInvader import Screen
-from SpaceInvader.Enemies import Enemies
 from SpaceInvader.Partie import Partie
-from SpaceInvader.Projectile import Projectile
 from SpaceInvader.Vaisseau import Vaisseau
-from SpaceInvader.Wall import Wall
 
 
 # https://www.crazygames.fr/jeu/space-invaders
@@ -63,8 +58,6 @@ def run():
 
     core.memory("partie").update()
 
-    print(core.memory("screen"))
-
     if core.memory("screen").__eq__(Screen.Screen.INGAME.value):
 
         core.memory("vaisseau").updateProjectile()
@@ -80,14 +73,14 @@ def run():
 
         if keys1 and keys[pygame.K_SPACE]:
             core.keyPress = False
-            print("SPACE")
             core.memory("vaisseau").addProjectile()
-
-
 
         ##lorsque tout les ennemies ont été tué on n'en remet
         if len(core.memory("enemies")) == 0:
-            core.memory("partie").end()
+            core.memory("partie").start()
+            core.memory("partie").speedCoef += 0.5
+            core.memory("partie").coefLaunchProjectile += 2
+
 
         for i in core.memory("wall"):
             i.draw()
@@ -154,19 +147,12 @@ def run():
 
                 print("EXIT2")
 
-
                 core.memory("enemies").clear()
                 core.memory("wall").clear()
 
                 core.memory("screen", Screen.Screen.MENU.value)
 
-
-
-
-
                 core.mouseclickL = False
-
-
 
 
 core.main(setup, run)

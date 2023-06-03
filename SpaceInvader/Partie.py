@@ -15,6 +15,8 @@ class Partie:
     def __init__(self):
         self.backgroundColor = (0, 0, 0)
         self.timer = 0
+        self.speedCoef = 1
+        self.coefLaunchProjectile = 0
 
     def start(self):
 
@@ -28,7 +30,7 @@ class Partie:
             core.memory("wall").append(Wall(Vector2((((i + 1) * d) - d1, 600))))
 
         # Enemies
-        n = randrange(1, 15)
+        n = randrange(1, 5) #15
         l = 1000
         d = (l / n)
         d1 = d - (d / 2)
@@ -37,7 +39,7 @@ class Partie:
             core.memory("enemies").append(
                 Enemies(Vector2((((i + 1) * d) - d1, 200)), core.memory("textureRed_En"), 10, 3))
 
-        n = randrange(12)
+        n = randrange(1, 3) #12
         l = 1000
         d = (l / n)
         d1 = (l / n) - (l / n) / 2
@@ -54,39 +56,49 @@ class Partie:
 
         for i in core.memory("vaisseau").projectile:
 
-            vaisseauRect = Rect(i.position.x, i.position.y, 10, 20)
-            #core.Draw.rect((255, 255, 255, 150), vaisseauRect)
+            vaisseauRectProjectile = Rect(i.position.x, i.position.y, 10, 20)
+            #core.Draw.rect((255, 255, 255, 150), vaisseauRectProjectile)
 
             for j in core.memory("wall"):
 
                 wallRect = Rect(j.position.x, j.position.y, 10, 10)
                 #core.Draw.rect(j.color, wallRect)
 
-                if (vaisseauRect.colliderect(wallRect)):
+                if (vaisseauRectProjectile.colliderect(wallRect)):
+
                     core.memory("vaisseau").removeProjectile(i)
                     j.remove()
 
             for k in core.memory("enemies"):
 
                 enemiesRect = Rect(k.position.x, k.position.y, 20, 10)
-                #core.Draw.rect(k.color, enemiesRect)
+                core.Draw.rect((0, 0, 255, 150), enemiesRect)
 
-                if (vaisseauRect.colliderect(enemiesRect)):
+                if (vaisseauRectProjectile.colliderect(enemiesRect)):
                     core.memory("vaisseau").removeProjectile(i)
                     core.memory("vaisseau").addPoint(10)
                     core.memory("enemies").remove(k)
+
+                for o in k.projectile:
+                    enemiesProjectileRect = Rect(o.position.x, o.position.y, 10, 20)
+                    core.Draw.rect((0, 255, 255, 150), enemiesProjectileRect)
+
+                    if vaisseauRectProjectile.colliderect(enemiesProjectileRect):
+                        core.memory("vaisseau").removeProjectile(i)
+                        k.removeProjectile(o)
+
 
         for l in core.memory("enemies"):
 
             for m in l.projectile:
 
                 enemiesProjectileRect = Rect(m.position.x, m.position.y, 10, 20)
-                #core.Draw.rect(m.color, enemiesProjectileRect)
+                core.Draw.rect(m.color, enemiesProjectileRect)
 
                 for n in core.memory("wall"):
 
                     wallRect = Rect(n.position.x, n.position.y, 10, 10)
-                    #core.Draw.rect(n.color, wallRect)
+                    core.Draw.rect(n.color, wallRect)
 
                     if wallRect.colliderect(enemiesProjectileRect):
                         l.removeProjectile(m)

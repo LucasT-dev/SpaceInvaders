@@ -46,8 +46,9 @@ class Vaisseau:
                 Projectile(Vector2(core.memory("vaisseau").position.x + 32, core.memory("vaisseau").position.y), 5,
                            (0, 0, 255)))
 
-    def removeProjectile(self, index):
-        self.projectile.remove(index)
+    def removeProjectile(self, element):
+        if (self.projectile.__contains__(element)):
+            self.projectile.remove(element)
 
     def updateProjectile(self):
 
