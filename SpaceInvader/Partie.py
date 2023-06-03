@@ -2,6 +2,7 @@ import time
 from datetime import datetime
 from random import randrange
 
+import pygame
 from pygame import Vector2
 from pygame.rect import Rect
 
@@ -21,6 +22,7 @@ class Partie:
         self.startTime = time.time()
         self.endTime = 0
         self.enemiesKill = 0
+        self.name = " "
 
     def start(self):
 
@@ -189,9 +191,13 @@ class Partie:
             core.Draw.text((255, 255, 255), " = " + str(core.memory("vaisseau").score * self.enemiesKill - self.endTime.__int__()), Vector2(450, 550), 25,
                            "Arial")
 
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    print(pygame.key.name(event.key))
+                    self.name += str(pygame.key.name(event.key))
+
+            core.Draw.text((255, 255, 255), " Name : " + self.name, Vector2(450, 600), 25), "Arial"
 
             if not core.memory("textureE").ready:
                 core.memory("textureE").load()
             core.memory("textureE").show()
-
-        #self.timer = datetime.second
