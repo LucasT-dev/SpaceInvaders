@@ -1,7 +1,8 @@
+import time
 from datetime import datetime
 from random import randrange
 
-from pygame import Vector2, time
+from pygame import Vector2
 from pygame.rect import Rect
 
 import core
@@ -17,6 +18,9 @@ class Partie:
         self.timer = 0
         self.speedCoef = 1
         self.coefLaunchProjectile = 0
+        self.startTime = time.time()
+        self.endTime = 0
+        self.enemiesKill = 0
 
     def start(self):
 
@@ -30,27 +34,28 @@ class Partie:
             core.memory("wall").append(Wall(Vector2((((i + 1) * d) - d1, 600))))
 
         # Enemies
-        n = randrange(1, 5) #15
+        n = randrange(1, 15) #15
         l = 1000
         d = (l / n)
         d1 = d - (d / 2)
 
         for i in range(n):
             core.memory("enemies").append(
-                Enemies(Vector2((((i + 1) * d) - d1, 200)), core.memory("textureRed_En"), 10, 3))
+                Enemies(Vector2((((i + 1) * d) - d1, 200)), core.memory("textureRed_En"), 20, 3))
 
-        n = randrange(1, 3) #12
+        n = randrange(1, 12) #12
         l = 1000
         d = (l / n)
         d1 = (l / n) - (l / n) / 2
 
         for i in range(n):
             core.memory("enemies").append(
-                Enemies(Vector2((((i + 1) * d) - d1, 300)), core.memory("textureGreen_En"), 5, 5))
+                Enemies(Vector2((((i + 1) * d) - d1, 300)), core.memory("textureGreen_En"), 10, 5))
 
     def end(self):
         print("END")
         core.memory("screen", Screen.Screen.GAMEOVER.value)
+        self.endTime = time.time() - self.startTime
 
     def collide(self):
 
@@ -72,16 +77,18 @@ class Partie:
             for k in core.memory("enemies"):
 
                 enemiesRect = Rect(k.position.x, k.position.y, 20, 10)
-                core.Draw.rect((0, 0, 255, 150), enemiesRect)
+                #core.Draw.rect((0, 0, 255, 150), enemiesRect)
 
                 if (vaisseauRectProjectile.colliderect(enemiesRect)):
                     core.memory("vaisseau").removeProjectile(i)
-                    core.memory("vaisseau").addPoint(10)
                     core.memory("enemies").remove(k)
+
+                    core.memory("vaisseau").addPoint(k.score)
+                    core.memory("partie").enemiesKill += 1
 
                 for o in k.projectile:
                     enemiesProjectileRect = Rect(o.position.x, o.position.y, 10, 20)
-                    core.Draw.rect((0, 255, 255, 150), enemiesProjectileRect)
+                    #core.Draw.rect((0, 255, 255, 150), enemiesProjectileRect)
 
                     if vaisseauRectProjectile.colliderect(enemiesProjectileRect):
                         core.memory("vaisseau").removeProjectile(i)
@@ -146,11 +153,13 @@ class Partie:
                 core.memory("textureGreen_En").load()
 
 
-            core.Draw.text((255, 255, 255), "Score :" + str(core.memory("vaisseau").score), Vector2(800, 20), 25,
+            core.Draw.text((255, 255, 255), "Score : " + str(core.memory("vaisseau").score), Vector2(800, 20), 25,
                            "Arial")
-            core.Draw.text((255, 255, 255), "LifePoint :" + str(core.memory("vaisseau").lifePoint), Vector2(800, 45),
+            core.Draw.text((255, 255, 255), "LifePoint : " + str(core.memory("vaisseau").lifePoint), Vector2(800, 45),
                            25, "Arial")
-            core.Draw.text((255, 255, 255), "Position :" + str(core.memory("vaisseau").position), Vector2(800, 70), 25,
+            core.Draw.text((255, 255, 255), "Kill : " + str(self.enemiesKill), Vector2(800, 70), 25,
+                           "Arial")
+            core.Draw.text((255, 255, 255), "Time : " + str(time.time() - self.startTime), Vector2(800, 95), 25,
                            "Arial")
 
         if core.memory("screen").__eq__(Screen.Screen.SETTING.value):
@@ -164,6 +173,22 @@ class Partie:
             core.Draw.text((255, 137, 0), "GAME OVER : ", Vector2(350, 100), 70, "Script MT Bold")
             core.Draw.text((255, 255, 255), "SCORE : " + str(core.memory("vaisseau").score), Vector2(450, 200), 30,
                            "Arial")
+            core.Draw.text((255, 255, 255), "Kill : " + str(self.enemiesKill), Vector2(450, 250), 25,
+                           "Arial")
+            core.Draw.text((255, 255, 255), "Time : " + str(self.endTime), Vector2(450, 300), 25,
+                           "Arial")
+
+            core.Draw.text((255, 255, 255), "TOTAL : " + str(core.memory("vaisseau").score), Vector2(450, 450), 25,
+                           "Arial")
+            core.Draw.text((255, 255, 255), " * " + str(self.enemiesKill), Vector2(490, 475), 25,
+                           "Arial")
+            core.Draw.text((255, 255, 255), " - " + str(self.endTime.__int__()), Vector2(490, 500), 25,
+                           "Arial")
+            core.Draw.text((255, 255, 255), " ------------------- ", Vector2(450, 525), 25,
+                           "Arial")
+            core.Draw.text((255, 255, 255), " = " + str(core.memory("vaisseau").score * self.enemiesKill - self.endTime.__int__()), Vector2(450, 550), 25,
+                           "Arial")
+
 
             if not core.memory("textureE").ready:
                 core.memory("textureE").load()
