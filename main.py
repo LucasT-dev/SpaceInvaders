@@ -72,14 +72,18 @@ def run():
         keys = pygame.key.get_pressed()
         keys1 = core.getkeyPress()
 
+        #print(core.getkeyPressValue())
+
+        if core.getKeyPressList("SPACE") and keys1:
+            core.keyPress = False
+            core.memory("vaisseau").addProjectile()
+
         if keys[pygame.K_LEFT]:
             core.memory("vaisseau").moveLeft()
+
         if keys[pygame.K_RIGHT]:
             core.memory("vaisseau").moveRight()
 
-        if keys1 and keys[pygame.K_SPACE]:
-            core.keyPress = False
-            core.memory("vaisseau").addProjectile()
 
         ##lorsque tout les ennemies ont été tué on n'en remet
         if len(core.memory("enemies")) == 0:

@@ -1,3 +1,4 @@
+ left:12550
  Joueur1:10000
 
  Joueur2:5000
