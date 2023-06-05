@@ -1,0 +1,5 @@
+ Joueur1:10000
+
+ Joueur2:5000
+
+ Joueur3:3000

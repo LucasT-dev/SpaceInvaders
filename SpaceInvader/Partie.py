@@ -23,6 +23,7 @@ class Partie:
         self.endTime = 0
         self.enemiesKill = 0
         self.name = " "
+        self.totalScore = 0
 
     def start(self):
 
@@ -142,6 +143,12 @@ class Partie:
                 core.memory("textureE").load()
             core.memory("textureE").show()
 
+
+            j = 0
+            for i in core.memory("score"):
+                core.Draw.text((255, 255, 255), i.pseudo + " : " + str(i.score), (100, 200 + 25*j), 35, "Arial")
+                j +=1
+
         if core.memory("screen").__eq__(Screen.Screen.INGAME.value):
 
             if not core.memory("textureV").ready:
@@ -172,6 +179,8 @@ class Partie:
 
         if core.memory("screen").__eq__(Screen.Screen.GAMEOVER.value):
 
+            self.totalScore = core.memory("vaisseau").score * self.enemiesKill - self.endTime.__int__()
+
             core.Draw.text((255, 137, 0), "GAME OVER : ", Vector2(350, 100), 70, "Script MT Bold")
             core.Draw.text((255, 255, 255), "SCORE : " + str(core.memory("vaisseau").score), Vector2(450, 200), 30,
                            "Arial")
@@ -188,7 +197,7 @@ class Partie:
                            "Arial")
             core.Draw.text((255, 255, 255), " ------------------- ", Vector2(450, 525), 25,
                            "Arial")
-            core.Draw.text((255, 255, 255), " = " + str(core.memory("vaisseau").score * self.enemiesKill - self.endTime.__int__()), Vector2(450, 550), 25,
+            core.Draw.text((255, 255, 255), " = " + str(self.totalScore), Vector2(450, 550), 25,
                            "Arial")
 
             for event in pygame.event.get():

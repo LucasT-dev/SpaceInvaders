@@ -1,4 +1,5 @@
 # This is a sample Python script.
+import os.path
 import sys
 
 import pygame
@@ -8,6 +9,7 @@ from pygame.rect import Rect
 import core
 from SpaceInvader import Screen
 from SpaceInvader.Partie import Partie
+from SpaceInvader.ScoreManager import ScoreManager
 from SpaceInvader.Vaisseau import Vaisseau
 
 
@@ -27,6 +29,10 @@ def setup():
 
     core.memory("wall", [])
     core.memory("enemies", [])
+
+    core.memory("score", [])
+
+    ScoreManager.load(1, "score.txt")
 
     # mixer.init()
     # Loading the song
@@ -121,6 +127,7 @@ def run():
 
             elif exitButton.collidepoint(core.getMouseLeftClick()):
                 print("EXIT")
+                ScoreManager.write(1, "score.txt")
                 sys.exit()
             # Bottom START
 
@@ -146,6 +153,8 @@ def run():
             if exitButton.collidepoint(core.getMouseLeftClick()):
 
                 print("EXIT2")
+
+                ScoreManager.insert(1, ScoreManager.ScoreList(core.memory("partie").name, core.memory("partie").totalScore))
 
                 core.memory("enemies").clear()
                 core.memory("wall").clear()
