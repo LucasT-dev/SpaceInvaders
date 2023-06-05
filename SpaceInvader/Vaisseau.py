@@ -8,14 +8,10 @@ class Vaisseau:
 
     def __init__(self):
         self.score = 0
-        self.modele = 0  # !!!
         self.speed = 2
-        self.maxSpeed = 5
-        self.acc = 2
-        self.maxAcc = 3
+        self.speedProjectile = 8
+        self.maxProjectile = 10
         self.lifePoint = 3
-        self.shottingSpeed = 2
-        self.shield = False
         self.position = Vector2(500, 700)
         self.projectile = []
 
@@ -40,10 +36,10 @@ class Vaisseau:
 
         print("projectile")
 
-        if len(self.projectile) < 5:
-            print("inf 5")
+        if len(self.projectile) < self.maxProjectile:
+
             self.projectile.append(
-                Projectile(Vector2(core.memory("vaisseau").position.x + 32, core.memory("vaisseau").position.y), 5,
+                Projectile(Vector2(core.memory("vaisseau").position.x + 32, core.memory("vaisseau").position.y), self.speedProjectile,
                            (0, 0, 255)))
 
     def removeProjectile(self, element):
@@ -53,8 +49,9 @@ class Vaisseau:
     def updateProjectile(self):
 
         for i in self.projectile:
-            i.position = Vector2(i.position.x + 0, i.position.y - self.speed)
+
+            i.movePlayerProjectile()
             i.draw()
+
             if i.position.y < 0:
-                print("y inf 0 ")
                 self.removeProjectile(i)

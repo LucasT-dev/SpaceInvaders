@@ -12,10 +12,8 @@ class Enemies:
         self.score = score
         self.speedProjectile = speedProjectile
         self.modele = texture
-        self.shield = False
         self.position = position
         self.color = (155, 255, 255)
-        self.height = 10
         self.projectile = []
 
     def draw(self):
@@ -60,7 +58,8 @@ class Enemies:
     def updateProjectile(self):
 
         for i in self.projectile:
-            i.position = Vector2(i.position.x, i.position.y + (self.speedProjectile * core.memory("partie").speedCoef))
+
+            i.moveEnemiesProjectile()
             i.draw()
 
             if i.position.y > 800:
