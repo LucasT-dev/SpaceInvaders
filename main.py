@@ -99,7 +99,7 @@ def run():
         edge(core.memory("vaisseau"))
 
 
-    # MAIN
+    # MENU
     if core.memory("screen").__eq__(Screen.Screen.MENU.value):
 
         if core.getMouseLeftClick():

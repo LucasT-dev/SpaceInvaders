@@ -37,8 +37,6 @@ class ScoreManager:
 
             else: j+=1
 
-
-
     class ScoreList:
         def __init__(self, pseudo, score):
             self.pseudo = pseudo

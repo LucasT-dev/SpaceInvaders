@@ -8,7 +8,7 @@ class Vaisseau:
 
     def __init__(self):
         self.score = 0
-        self.speed = 2
+        self.speed = 7
         self.speedProjectile = 8
         self.maxProjectile = 10
         self.lifePoint = 3
@@ -16,17 +16,18 @@ class Vaisseau:
         self.projectile = []
 
     def moveRight(self):
-        self.position.x = self.position.x + 7
+        self.position.x = self.position.x + self.speed
         core.memory("textureV").pos = self.position
 
     def moveLeft(self):
-        self.position.x = self.position.x - 7
+        self.position.x = self.position.x - self.speed
         core.memory("textureV").pos = self.position
 
     def addPoint(self, point):
         self.score += point
 
     def removelife(self):
+
         self.lifePoint -= 1
 
         if self.lifePoint.__eq__(0):
@@ -43,6 +44,7 @@ class Vaisseau:
                            (0, 0, 255)))
 
     def removeProjectile(self, element):
+
         if (self.projectile.__contains__(element)):
             self.projectile.remove(element)
 
