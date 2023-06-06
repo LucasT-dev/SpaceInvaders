@@ -54,8 +54,8 @@ def setup():
 def edge(j):
     if j.position.x < 0:
         j.position.x = 0
-    if j.position.x > core.WINDOW_SIZE[0] - 30:
-        j.position.x = core.WINDOW_SIZE[0] - 30
+    if j.position.x > core.WINDOW_SIZE[0] - 60:
+        j.position.x = core.WINDOW_SIZE[0] - 60
 
 
 def run():
