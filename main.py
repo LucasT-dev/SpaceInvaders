@@ -12,8 +12,7 @@ from SpaceInvader.Partie import Partie
 from SpaceInvader.ScoreManager import ScoreManager
 from SpaceInvader.Vaisseau import Vaisseau
 
-
-# https://www.crazygames.fr/jeu/space-invaders
+#TOKEN : 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
 
 def setup():
     print("Setup START---------")
