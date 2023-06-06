@@ -3,13 +3,16 @@ import core
 
 class Wall:
 
-    def __init__(self, position):
+    def __init__(self, position, texture):
         self.position = position
-        self.color = (255, 255, 255)
+        self.color = (255, 255, 255,127)
         self.height = 10
+        self.modele = texture
 
     def draw(self):
-        core.Draw.rect(self.color, (self.position.x, self.position.y, self.height, self.height))
+        self.modele.pos.x = self.position.x
+        self.modele.pos.y = self.position.y
+        self.modele.show()
 
     def remove(self):
         core.memory("wall").remove(self)

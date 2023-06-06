@@ -10,10 +10,11 @@ class Vaisseau:
         self.score = 0
         self.speed = 7
         self.speedProjectile = 8
-        self.maxProjectile = 10
+        self.maxProjectile = 6
         self.lifePoint = 3
         self.position = Vector2(500, 700)
         self.projectile = []
+        core.memory("textureV").pos = self.position
 
     def moveRight(self):
         self.position.x = self.position.x + self.speed
@@ -35,13 +36,11 @@ class Vaisseau:
 
     def addProjectile(self):
 
-        print("projectile")
-
         if len(self.projectile) < self.maxProjectile:
 
             self.projectile.append(
-                Projectile(Vector2(core.memory("vaisseau").position.x + 32, core.memory("vaisseau").position.y), self.speedProjectile,
-                           (0, 0, 255)))
+                Projectile(Vector2(core.memory("vaisseau").position.x + 27, core.memory("vaisseau").position.y), self.speedProjectile,
+                           core.memory("missileV")))
 
     def removeProjectile(self, element):
 
@@ -51,7 +50,6 @@ class Vaisseau:
     def updateProjectile(self):
 
         for i in self.projectile:
-
             i.movePlayerProjectile()
             i.draw()
 

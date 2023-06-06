@@ -1,6 +1,12 @@
  left:12550
+
+ test:10701
+
  Joueur1:10000
+
+ testt:7876
 
  Joueur2:5000
 
  Joueur3:3000
+

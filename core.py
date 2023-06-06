@@ -312,7 +312,10 @@ class Draw:
 
     def text(color, texte, position, taille=30, font='Arial'):
         pygame.font.init()
-        myfont = pygame.font.SysFont(font, taille)
+        if type(font)==type(" "):
+            myfont = pygame.font.SysFont(font, taille)
+        else:
+            myfont= font
         textsurface = myfont.render(texte, False, color)
         if len(color)>3:
             textsurface.set_alpha(color[3])

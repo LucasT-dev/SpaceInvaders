@@ -11,7 +11,6 @@ from SpaceInvader import Screen
 from SpaceInvader.Enemies import Enemies
 from SpaceInvader.Wall import Wall
 
-
 class Partie:
 
     def __init__(self):
@@ -24,41 +23,45 @@ class Partie:
         self.enemiesKill = 0
         self.name = " "
         self.totalScore = 0
+        self.font = "./SpaceInvader/ressource/Police/Police.TTF"
+        self.pygameFont = pygame.font.SysFont("./SpaceInvader/ressource/Police/Police.TTF", 35)
+        self.tempsExplosion = 1
 
     def start(self):
 
         # Wall
-        n = 10
+        n = randrange(3,10)
         l = 1000
         d = (l / n)
         d1 = (l / n) - (l / n) / 2
 
         for i in range(n):
-            core.memory("wall").append(Wall(Vector2((((i + 1) * d) - d1, 600))))
+            core.memory("wall").append(Wall(Vector2((((i + 1) * d) - d1, 600)), core.memory("textureWall")))
 
         # Enemies
-        n = randrange(1, 15) #15
+        n = randrange(3, 10)
         l = 1000
         d = (l / n)
         d1 = d - (d / 2)
 
         for i in range(n):
             core.memory("enemies").append(
-                Enemies(Vector2((((i + 1) * d) - d1, 200)), core.memory("textureRed_En"), 20, 3))
+                Enemies(Vector2((((i + 1) * d) - d1, 100)), core.memory("textureRed_En"), 20, 3))
 
-        n = randrange(1, 12) #12
+        n = randrange(2, 8) #12
         l = 1000
         d = (l / n)
         d1 = (l / n) - (l / n) / 2
 
         for i in range(n):
             core.memory("enemies").append(
-                Enemies(Vector2((((i + 1) * d) - d1, 300)), core.memory("textureGreen_En"), 10, 5))
+                Enemies(Vector2((((i + 1) * d) - d1, 200)), core.memory("textureGreen_En"), 10, 5))
 
     def end(self):
         print("END")
         core.memory("screen", Screen.Screen.GAMEOVER.value)
         self.endTime = time.time() - self.startTime
+        self.timer=0
 
     def collide(self):
 
@@ -69,7 +72,7 @@ class Partie:
 
             for j in core.memory("wall"):
 
-                wallRect = Rect(j.position.x, j.position.y, 10, 10)
+                wallRect = Rect(j.position.x+15, j.position.y+15, 30, 28)
                 #core.Draw.rect(j.color, wallRect)
 
                 if (vaisseauRectProjectile.colliderect(wallRect)):
@@ -79,15 +82,25 @@ class Partie:
 
             for k in core.memory("enemies"):
 
-                enemiesRect = Rect(k.position.x, k.position.y, 20, 10)
+                enemiesRect=None
+
+                if (str(k.modele.url).__eq__("./SpaceInvader/ressource/Red_En.png")):
+                    enemiesRect= Rect(k.position.x, k.position.y, 38, 22)
+
+                if (str(k.modele.url).__eq__("./SpaceInvader/ressource/Green_En.png")):
+                    enemiesRect = Rect(k.position.x, k.position.y,20 ,17)
                 #core.Draw.rect((0, 0, 255, 150), enemiesRect)
 
                 if (vaisseauRectProjectile.colliderect(enemiesRect)):
                     core.memory("vaisseau").removeProjectile(i)
-                    core.memory("enemies").remove(k)
-
-                    core.memory("vaisseau").addPoint(k.score)
-                    core.memory("partie").enemiesKill += 1
+                    if self.tempsExplosion>0:
+                        core.memory("explosion").pos = k.position
+                        core.memory("explosion").show()
+                        self.tempsExplosion -=0.1
+                    else:
+                        core.memory("enemies").remove(k)
+                        core.memory("vaisseau").addPoint(k.score)
+                        core.memory("partie").enemiesKill += 1
 
                 for o in k.projectile:
                     enemiesProjectileRect = Rect(o.position.x, o.position.y, 10, 20)
@@ -102,13 +115,13 @@ class Partie:
 
             for m in l.projectile:
 
-                enemiesProjectileRect = Rect(m.position.x, m.position.y, 10, 20)
-                core.Draw.rect(m.color, enemiesProjectileRect)
+                enemiesProjectileRect = Rect(m.position.x+4, m.position.y, 15, 25)
+                #core.Draw.rect(m.color, enemiesProjectileRect)
 
                 for n in core.memory("wall"):
 
-                    wallRect = Rect(n.position.x, n.position.y, 10, 10)
-                    core.Draw.rect(n.color, wallRect)
+                    wallRect = Rect(n.position.x+15, n.position.y+15, 30, 28)
+                    #core.Draw.rect(n.color, wallRect)
 
                     if wallRect.colliderect(enemiesProjectileRect):
                         l.removeProjectile(m)
@@ -143,10 +156,9 @@ class Partie:
                 core.memory("textureE").load()
             core.memory("textureE").show()
 
-
             j = 0
             for i in core.memory("score"):
-                core.Draw.text((255, 255, 255), i.pseudo + " : " + str(i.score), (100, 200 + 25*j), 35, "Arial")
+                core.Draw.text((255, 255, 255), str(j+1) + " : " + i.pseudo + " : " + str(i.score).replace("\n",""), (30, 200 + 25*j), 45, self.pygameFont)
                 j +=1
 
         if core.memory("screen").__eq__(Screen.Screen.INGAME.value):
@@ -161,15 +173,43 @@ class Partie:
             if not core.memory("textureGreen_En").ready:
                 core.memory("textureGreen_En").load()
 
+            if not core.memory("textureWall").ready:
+                core.memory("textureWall").load()
 
+            if not core.memory("missileV").ready:
+                core.memory("missileV").load()
+
+            if not core.memory("projectileG").ready:
+                core.memory("projectileG").load()
+
+            if not core.memory("projectileR").ready:
+                core.memory("projectileR").load()
+
+            if not core.memory("explosion").ready:
+                core.memory("explosion").load()
+
+            n = int(time.time() - self.startTime)
             core.Draw.text((255, 255, 255), "Score : " + str(core.memory("vaisseau").score), Vector2(800, 20), 25,
-                           "Arial")
+                           self.pygameFont)
             core.Draw.text((255, 255, 255), "LifePoint : " + str(core.memory("vaisseau").lifePoint), Vector2(800, 45),
-                           25, "Arial")
+                           25, self.pygameFont)
             core.Draw.text((255, 255, 255), "Kill : " + str(self.enemiesKill), Vector2(800, 70), 25,
-                           "Arial")
-            core.Draw.text((255, 255, 255), "Time : " + str(time.time() - self.startTime), Vector2(800, 95), 25,
-                           "Arial")
+                           self.pygameFont)
+            core.Draw.text((255, 255, 255), "Time : " + str(n), Vector2(800, 95), 25,
+                           self.pygameFont)
+
+
+
+            #mouvements ennemis
+            for w in core.memory("enemies"):
+                if n%2==0:
+                    w.moveRight()
+                elif n%2!=0:
+                    w.moveLeft()
+                if (str(w.modele.url).__eq__("./SpaceInvader/ressource/Red_En.png"))and w.position.y<=400:
+                    w.moveDown()
+                if (str(w.modele.url).__eq__("./SpaceInvader/ressource/Green_En.png"))and w.position.y<=500:
+                    w.moveDown()
 
         if core.memory("screen").__eq__(Screen.Screen.SETTING.value):
 
@@ -183,30 +223,32 @@ class Partie:
 
             core.Draw.text((255, 137, 0), "GAME OVER : ", Vector2(350, 100), 70, "Script MT Bold")
             core.Draw.text((255, 255, 255), "SCORE : " + str(core.memory("vaisseau").score), Vector2(450, 200), 30,
-                           "Arial")
+                           self.pygameFont)
             core.Draw.text((255, 255, 255), "Kill : " + str(self.enemiesKill), Vector2(450, 250), 25,
-                           "Arial")
+                           self.pygameFont)
             core.Draw.text((255, 255, 255), "Time : " + str(self.endTime), Vector2(450, 300), 25,
-                           "Arial")
+                           self.pygameFont)
 
             core.Draw.text((255, 255, 255), "TOTAL : " + str(core.memory("vaisseau").score), Vector2(450, 450), 25,
-                           "Arial")
+                           self.pygameFont)
             core.Draw.text((255, 255, 255), " * " + str(self.enemiesKill), Vector2(490, 475), 25,
-                           "Arial")
+                           self.pygameFont)
             core.Draw.text((255, 255, 255), " - " + str(self.endTime.__int__()), Vector2(490, 500), 25,
-                           "Arial")
+                           self.pygameFont)
             core.Draw.text((255, 255, 255), " ------------------- ", Vector2(450, 525), 25,
-                           "Arial")
+                           self.pygameFont)
             core.Draw.text((255, 255, 255), " = " + str(self.totalScore), Vector2(450, 550), 25,
-                           "Arial")
+                           self.pygameFont)
 
-            for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
-                    print(pygame.key.name(event.key))
-                    self.name += str(pygame.key.name(event.key))
+            if core.getkeyPressValue():
+                self.name += pygame.key.name((core.getkeyPressValue()))
+                core.keyPressValue = None
 
             core.Draw.text((255, 255, 255), " Name : " + self.name, Vector2(450, 600), 25), "Arial"
 
             if not core.memory("textureE").ready:
                 core.memory("textureE").load()
             core.memory("textureE").show()
+
+
+

@@ -2,6 +2,9 @@ import core
 
 
 class ScoreManager:
+    def __init__(self, pseudo, score):
+        self.pseudo = pseudo
+        self.score = score
 
     def load(self, filename):
 
@@ -9,7 +12,7 @@ class ScoreManager:
 
         for i in f:
             if i != "\n":
-                core.memory("score").append(ScoreManager.ScoreList(i.split(":")[0], i.split(":")[1]))
+                core.memory("score").append(ScoreManager(i.split(":")[0], i.split(":")[1]))
 
     def write(self, filename):
 
@@ -35,9 +38,6 @@ class ScoreManager:
 
                 break
 
-            else: j+=1
+            else:
+                j+=1
 
-    class ScoreList:
-        def __init__(self, pseudo, score):
-            self.pseudo = pseudo
-            self.score = score
