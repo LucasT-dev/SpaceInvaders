@@ -77,10 +77,19 @@ class Partie:
                     core.memory("vaisseau").removeProjectile(i)
                     j.remove()
 
-            for k in core.memory("enemies"):
+             for k in core.memory("enemies"):
 
-                enemiesRect = Rect(k.position.x, k.position.y, 20, 10)
-                #core.Draw.rect((0, 0, 255, 150), enemiesRect)
+                print(k.modele.url)
+
+                enemiesRect = None
+
+                if (str(k.modele.url).__eq__("./SpaceInvader/ressource/Red_En.png")):
+                    enemiesRect = Rect(k.position.x, k.position.y, 20, 10)
+                if (str(k.modele.url).__eq__("./SpaceInvader/ressource/Green_En.png")):
+                    enemiesRect = Rect(k.position.x, k.position.y, 50, 10)
+
+                #enemiesRect = Rect(k.position.x, k.position.y, 20, 10)
+                core.Draw.rect((0, 0, 255, 150), enemiesRect)
 
                 if (vaisseauRectProjectile.colliderect(enemiesRect)):
                     core.memory("vaisseau").removeProjectile(i)
