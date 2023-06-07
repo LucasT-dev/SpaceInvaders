@@ -35,14 +35,6 @@ def setup():
 
     ScoreManager.load(1, "score.txt")
 
-    # mixer.init()
-    # Loading the song
-    # mixer.music.load("./SpaceInvader/ressource/song.mp3")
-    # Setting the volume
-    # mixer.music.set_volume(0.7)
-    # Start playing the song
-    # mixer.music.play(-1)
-
     core.memory("textureL", core.Texture("./SpaceInvader/ressource/Logo.png", Vector2(260, 25), 0, (500, 350)))
     core.memory("textureP", core.Texture("./SpaceInvader/ressource/Play.png", Vector2(330, 450), 0, (1500, 1000)))
     core.memory("textureS", core.Texture("./SpaceInvader/ressource/Setting.png", Vector2(280, 575), 0, (1500, 1000)))

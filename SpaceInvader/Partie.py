@@ -247,10 +247,20 @@ class Partie:
                            self.pygameFont)
 
             if core.getkeyPressValue():
-                self.name += pygame.key.name((core.getkeyPressValue()))
-                core.keyPressValue = None
 
-            core.Draw.text((255, 255, 255), " Name : " + self.name, Vector2(450, 600), 25), "Arial"
+                s = pygame.key.name((core.getkeyPressValue()))
+                print(s)
+                if s != "space" and s != "return" and s != "backspace" and s != "right_shift" and s != "left_shift" and s != "right" and s != "left" and s != "up" and s != "down":
+
+                    self.name += pygame.key.name((core.getkeyPressValue()))
+                    core.keyPressValue = None
+                if s.__eq__("backspace") and len(self.name) > 1:
+
+                    print(len(self.name))
+                    self.name = self.name.replace(self.name[len(self.name)-1], "")
+                    core.keyPressValue = None
+
+            core.Draw.text((255, 255, 255), " Name : " + self.name, Vector2(450, 600), 25), self.pygameFont
 
             if not core.memory("textureE").ready:
                 core.memory("textureE").load()
