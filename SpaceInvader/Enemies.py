@@ -16,6 +16,7 @@ class Enemies:
         self.color = (155, 255, 255)
         self.projectile = []
         self.speed = 2.5
+        self.tempsExplosion = 6
 
     def draw(self):
         self.modele.pos.x = self.position.x
