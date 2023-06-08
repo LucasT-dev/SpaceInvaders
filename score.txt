@@ -1,12 +1,18 @@
- left:12550
+ coucou:22140
 
- test:10701
+ poulet:16607
 
- Joueur1:10000
+joueur 2:12565
 
- testt:7876
+pppppp :11295
 
- Joueur2:5000
+aaaaaa:5661
 
- Joueur3:3000
+ salut:3557
+
+ salut:1258
+
+joueur 1:1256
+
+joueur 3:125
 

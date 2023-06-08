@@ -7,8 +7,8 @@ from pygame import Vector2
 from pygame.rect import Rect
 
 import core
-from SpaceInvader import Screen
 from SpaceInvader.Enemies import Enemies
+from SpaceInvader.Screen import Screen
 from SpaceInvader.Wall import Wall
 
 
@@ -24,8 +24,7 @@ class Partie:
         self.enemiesKill = 0
         self.name = " "
         self.totalScore = 0
-        self.font = "./SpaceInvader/ressource/Police/Police.TTF"
-        self.pygameFont = pygame.font.SysFont("./SpaceInvader/ressource/Police/Police.TTF", 35)
+        self.pygameFont = pygame.font.SysFont("./SpaceInvader/ressource/Police/Police.TTF",35)
 
 
     def start(self):
@@ -60,7 +59,7 @@ class Partie:
 
     def end(self):
         print("END")
-        core.memory("screen", Screen.Screen.GAMEOVER.value)
+        core.memory("screen", Screen.GAMEOVER)
         self.endTime = time.time() - self.startTime
         self.timer = 0
 
@@ -85,10 +84,10 @@ class Partie:
 
                 enemiesRect = None
 
-                if (str(k.modele.url).__eq__("./SpaceInvader/ressource/Red_En.png")):
+                if (str(k.modele.url) == ("./SpaceInvader/ressource/Red_En.png")):
                     enemiesRect = Rect(k.position.x, k.position.y, 38, 22)
 
-                if (str(k.modele.url).__eq__("./SpaceInvader/ressource/Green_En.png")):
+                if (str(k.modele.url) == ("./SpaceInvader/ressource/Green_En.png")):
                     enemiesRect = Rect(k.position.x, k.position.y, 20, 17)
                 #core.Draw.rect((0, 0, 255, 150), enemiesRect)
 
@@ -145,7 +144,11 @@ class Partie:
 
         core.setBgColor((0, 0, 0))
 
-        if core.memory("screen").__eq__(Screen.Screen.MENU.value):
+        if core.memory("screen") == Screen.MENU:
+
+            if not core.memory("bgMenu").ready:
+                core.memory("bgMenu").load()
+            core.memory("bgMenu").show()
 
             if not core.memory("textureL").ready:
                 core.memory("textureL").load()
@@ -163,13 +166,19 @@ class Partie:
                 core.memory("textureE").load()
             core.memory("textureE").show()
 
+        if core.memory("screen") == Screen.PAUSE:
+            if not core.memory("texturePa").ready:
+                core.memory("texturePa").load()
+            core.memory("texturePa").show()
+            core.memory("textureP").load()
+            core.memory("textureP").show()
+            core.memory("textureE").load()
+            core.memory("textureE").show()
 
-            j = 0
-            for i in core.memory("score"):
-                core.Draw.text((255, 255, 255), str(j+1) + " : " + i.pseudo + " : " + str(i.score).replace("\n",""), (30, 200 + 25*j), 45, self.pygameFont)
-                j +=1
-
-        if core.memory("screen").__eq__(Screen.Screen.INGAME.value):
+        if core.memory("screen") == Screen.INGAME:
+            if not core.memory("bgJeu").ready:
+                core.memory("bgJeu").load()
+            core.memory("bgJeu").show()
 
             if not core.memory("textureV").ready:
                 core.memory("textureV").load()
@@ -217,13 +226,19 @@ class Partie:
                 if (str(w.modele.url).__eq__("./SpaceInvader/ressource/Green_En.png")) and w.position.y <= 500:
                     w.moveDown()
 
-        if core.memory("screen").__eq__(Screen.Screen.SETTING.value):
+        if core.memory("screen") == Screen.SCOREBOARD:
 
             if not core.memory("textureE").ready:
                 core.memory("textureE").load()
             core.memory("textureE").show()
-
-        if core.memory("screen").__eq__(Screen.Screen.GAMEOVER.value):
+            j = 0
+            for i in core.memory("score"):
+                self.pygameFont = pygame.font.SysFont("./SpaceInvader/ressource/Police/Police.TTF", 80)
+                core.Draw.text((255,255,255),"Scoreboard",(350,100),80,self.pygameFont)
+                self.pygameFont = pygame.font.SysFont("./SpaceInvader/ressource/Police/Police.TTF", 35)
+                core.Draw.text((255, 255, 255), str(j+1) + " : " + i.pseudo + " : " + str(i.score).replace("\n",""), (400, 200 + 25*j), 45, self.pygameFont)
+                j +=1
+        if core.memory("screen") == Screen.GAMEOVER:
 
             self.totalScore = core.memory("vaisseau").score * self.enemiesKill - self.endTime.__int__()
 
@@ -249,19 +264,19 @@ class Partie:
             if core.getkeyPressValue():
 
                 s = pygame.key.name((core.getkeyPressValue()))
-                print(s)
-                if s != "space" and s != "return" and s != "backspace" and s != "right_shift" and s != "left_shift" and s != "right" and s != "left" and s != "up" and s != "down":
+                if s != "space" and s != "return" and s != "backspace" and s != "right_shift" and s != "left_shift" and s != "right" and s != "left" and s != "up" and s != "down" and len(self.name)<10:
 
                     self.name += pygame.key.name((core.getkeyPressValue()))
                     core.keyPressValue = None
                 if s.__eq__("backspace") and len(self.name) > 1:
-
                     print(len(self.name))
                     self.name = self.name.replace(self.name[len(self.name)-1], "")
                     core.keyPressValue = None
-
             core.Draw.text((255, 255, 255), " Name : " + self.name, Vector2(450, 600), 25), self.pygameFont
 
             if not core.memory("textureE").ready:
                 core.memory("textureE").load()
             core.memory("textureE").show()
+
+    def pause(self):
+        core.memory("screen", Screen.PAUSE)

@@ -27,12 +27,12 @@ class ScoreManager:
 
         f.close()
 
-    def insert(self, ScoreList):
+    def insert(ScoreList):
 
         j = 0
         for i in core.memory("score"):
 
-            if (int(i.score) < ScoreList.score):
+            if int(i.score) < ScoreList.score:
 
                 core.memory("score").insert(j, ScoreList)
 
